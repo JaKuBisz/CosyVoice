@@ -7,7 +7,7 @@ services:
       dockerfile: runtime/python/Dockerfile
       args:
         CACHE_BUST: "${CACHE_BUST:-1}"     # bump to force rebuild if needed
-    container_name: ${CONTAINER_NAME:-cosyvoice}
+    container_name: ${CONTAINER_NAME:-cosyvoicepath}
     user: "${PUID:-0}:${PGID:-0}"
     command: >
       bash -lc "
