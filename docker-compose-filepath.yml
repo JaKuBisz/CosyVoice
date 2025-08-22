@@ -1,0 +1,48 @@
+version: "3.9"
+
+services:
+  cosyvoice:
+    build:
+      context: .                           # repo root in Repository mode
+      dockerfile: runtime/python/Dockerfile
+      args:
+        CACHE_BUST: "${CACHE_BUST:-1}"     # bump to force rebuild if needed
+    container_name: ${CONTAINER_NAME:-cosyvoice}
+    user: "${PUID:-0}:${PGID:-0}"
+    command: >
+      bash -lc "
+        set -e
+        BOOT_REL='${BOOT_PATH:-runtime/python/boot/boot_cosyvoice.py}'
+        for ROOT in \
+          /opt/CosyVoice/CosyVoice \
+          /opt/CosyVoice \
+          /workspace/CosyVoice \
+          /workspace \
+          /CosyVoice \
+          /; do
+          if [ -f \"$ROOT/$BOOT_REL\" ]; then
+            echo \"[entry] repo root: $ROOT\"
+            cd \"$ROOT\"
+            exec python3 \"$BOOT_REL\"
+          fi
+        done
+        echo \"[entry] ERROR: cannot find $BOOT_REL\"
+        find / -path '*/runtime/python/boot/boot_cosyvoice.py' 2>/dev/null | head -n 20
+        exit 1
+      "
+    environment:
+      MODEL_ID:   ${MODEL_ID:-iic/CosyVoice2-0.5B}
+      MODEL_DIR:  ${MODEL_DIR:-/models/CosyVoice2-0.5B}
+      TTSFRD_ID:  ${TTSFRD_ID:-iic/CosyVoice-ttsfrd}
+      TTSFRD_DIR: ${TTSFRD_DIR:-/models/CosyVoice-ttsfrd}
+      HOST:       ${HOST:-0.0.0.0}
+      PORT:       ${PORT:-50000}
+      MAX_CONC:   ${MAX_CONC:-4}
+      SERVER_IMPL: ${SERVER_IMPL:-auto}     # auto|fastapi|grpc (handled in boot script)
+      CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES:-0}
+    volumes:
+      - ${HOST_MODEL_DIR:-/mnt/SSD/Apps/cosyVoice/model}:/models
+      - ${HOST_DATA_DIR:-/mnt/SSD/Apps/cosyVoice/data}:/workspace/data
+    ports:
+      - "${PORT:-50000}:${PORT:-50000}"
+    restart: unless-stopped
