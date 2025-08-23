@@ -127,7 +127,7 @@ def ensure_text_normalizer() -> str:
       - TEXT_NORM=ttsfrd  : require ttsfrd (local wheels or pip), else exit
       - TEXT_NORM=auto    : if INSTALL_TTSFRD=true try local wheels, else whatever is available
     """
-    print(f"[boot] TEXT_NORM={TEXT_NORM} INSTALL_TTSFRD={INSTALL_TTSFRD}", flush=True)
+    print(f"[boot] TEXT_NORM={TEXT_NORM} Should INSTALL_TTSFRD={INSTALL_TTSFRD}", flush=True)
 
     if TEXT_NORM == "wetext":
         subprocess.run([sys.executable, "-m", "pip", "uninstall", "-y", "ttsfrd", "ttsfrd_dependency"], check=False)
