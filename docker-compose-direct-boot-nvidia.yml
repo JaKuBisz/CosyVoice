@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  cosyvoice:
+    build:
+      context: .                                   # repo root (Repository mode)
+      dockerfile: runtime/python/Dockerfile
+    container_name: ${CONTAINER_NAME:-cosyvoice}
+    user: "${PUID:-0}:${PGID:-0}"
+    working_dir: /opt/CosyVoice/CosyVoice          # repo root inside image
+    command: ["bash","-lc","python3 ${BOOT_PATH:-runtime/python/boot/boot_cosyvoice.py}"]
+    environment:
+      SERVER_IMPL: ${SERVER_IMPL:-auto}            # auto|fastapi|grpc
+      DOWNLOAD_METHOD: ${DOWNLOAD_METHOD:-git}     # git|modelscope|auto
+      INSTALL_TTSFRD: ${INSTALL_TTSFRD:-false}
+      HOST:       ${HOST:-0.0.0.0}
+      PORT:       ${PORT:-50000}
+      MAX_CONC:   ${MAX_CONC:-4}
+      MODEL_ID:   ${MODEL_ID:-iic/CosyVoice2-0.5B}
+      MODEL_DIR:  ${MODEL_DIR:-/models/CosyVoice2-0.5B}
+      TTSFRD_ID:  ${TTSFRD_ID:-iic/CosyVoice-ttsfrd}
+      TTSFRD_DIR: ${TTSFRD_DIR:-/models/CosyVoice-ttsfrd}
+      CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES:-0}   # empty for CPU-only
+    volumes:
+      - ${HOST_MODEL_DIR:-/mnt/SSD/Apps/cosyVoice/model}:/models
+      - ${HOST_DATA_DIR:-/mnt/SSD/Apps/cosyVoice/data}:/workspace/data
+    ports:
+      - "${PORT:-50000}:${PORT:-50000}"
+    restart: unless-stopped
