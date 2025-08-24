@@ -10,6 +10,9 @@ services:
     working_dir: /opt/CosyVoice/CosyVoice          # repo root inside image
     command: ["bash","-lc","python3 ${BOOT_PATH:-runtime/python/boot/boot_cosyvoice.py}"]
     environment:
+      HOME: /tmp
+      PIP_USER: "1"
+      PYTHONUSERBASE: /tmp/.local
       SERVER_IMPL: ${SERVER_IMPL:-auto}            # auto|fastapi|grpc
       DOWNLOAD_METHOD: ${DOWNLOAD_METHOD:-git}     # git|modelscope|auto
       INSTALL_TTSFRD: ${INSTALL_TTSFRD:-false}
