@@ -8,10 +8,7 @@ services:
     container_name: ${CONTAINER_NAME:-cosyvoice}
     user: "${PUID:-0}:${PGID:-0}"
     working_dir: /opt/CosyVoice/CosyVoice          # repo root inside image
-    command: >
-      bash -lc "python3 /opt/CosyVoice/CosyVoice/runtime/python/fastapi/server.py
-                --port ${PORT:-50000}
-                --model_dir ${MODEL_DIR:-/models/CosyVoice2-0.5B}"
+    command: [ "bash","-lc","python3 /opt/CosyVoice/CosyVoice/runtime/python/fastapi/server.py --port ${PORT:-50000} --model_dir ${MODEL_DIR:-/models/CosyVoice2-0.5B}" ]
     environment:
       HOME: /tmp
       PIP_USER: "1"
