@@ -8,19 +8,7 @@ services:
     container_name: ${CONTAINER_NAME:-cosyvoice}
     user: "${PUID:-0}:${PGID:-0}"
     working_dir: /opt/CosyVoice/CosyVoice          # repo root inside image
-    command: >
-      bash -lc '
-      if [ "${SERVER_IMPL:-fastapi}" = "fastapi" ]; then
-        python3 /opt/CosyVoice/CosyVoice/runtime/python/fastapi/server.py
-          --port "${PORT:-50000}"
-          --model_dir "${MODEL_DIR:-/models/CosyVoice2-0.5B}";
-      else
-        python3 /opt/CosyVoice/CosyVoice/runtime/python/grpc/server.py
-          --host "${HOST:-0.0.0.0}"
-          --port "${PORT:-50000}"
-          --max_conc "${MAX_CONC:-4}"
-          --model_dir "${MODEL_DIR:-/models/CosyVoice2-0.5B}";
-      fi'
+    command: ["bash","-lc","python3 ${BOOT_PATH:-runtime/python/boot/boot_cosyvoice.py}"]
     environment:
       SERVER_IMPL: ${SERVER_IMPL:-auto}            # auto|fastapi|grpc
       DOWNLOAD_METHOD: ${DOWNLOAD_METHOD:-git}     # git|modelscope|auto
