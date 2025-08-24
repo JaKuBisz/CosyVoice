@@ -8,7 +8,7 @@ services:
     container_name: ${CONTAINER_NAME:-cosyvoice}
     user: "${PUID:-0}:${PGID:-0}"
     working_dir: /opt/CosyVoice/CosyVoice          # repo root inside image
-    command: ["bash","-lc","python3 ${BOOT_PATH:-runtime/python/boot/boot_cosyvoice.py}"]
+    command: ["bash","-lc","python3 ${BOOT_PATH:-runtime/python/boot/boot_cosyvoice_bk.py}"]
     environment:
       HOME: /tmp
       PIP_USER: "1"
