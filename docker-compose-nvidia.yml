@@ -23,7 +23,7 @@ services:
       MODEL_DIR:  ${MODEL_DIR:-/models/CosyVoice2-0.5B}
       TTSFRD_ID:  ${TTSFRD_ID:-iic/CosyVoice-ttsfrd}
       TTSFRD_DIR: ${TTSFRD_DIR:-/models/CosyVoice-ttsfrd}
-      CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES:-0}   # empty for CPU-only
+      CUDA_VISIBLE_DEVICES: ${CUDA_VISIBLE_DEVICES:-""}   # empty for CPU-only
     volumes:
       - ${HOST_MODEL_DIR:-/mnt/SSD/Apps/cosyVoice/model}:/models
       - ${HOST_DATA_DIR:-/mnt/SSD/Apps/cosyVoice/data}:/workspace/data
